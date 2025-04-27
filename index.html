@@ -1,0 +1,157 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chào Mừng Đến Với Website Của Tôi</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+            color: #333;
+        }
+        .header {
+            text-align: center;
+            padding: 50px 20px;
+            background-color: #007bff;
+            color: white;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 36px;
+        }
+        .header p {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .section {
+            margin-bottom: 30px;
+        }
+        .section h2 {
+            color: #007bff;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 5px;
+        }
+        .section p, .section ul {
+            color: #666;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        .section ul {
+            list-style: none;
+            padding: 0;
+        }
+        .section ul li {
+            margin: 10px 0;
+        }
+        .section ul li strong {
+            color: #333;
+        }
+        .button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #333;
+            color: white;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Chào Mừng Đến Với Website Của Tôi!</h1>
+        <p>Khám phá thông tin về tôi, doanh nghiệp của tôi và cách liên hệ với chúng tôi</p>
+    </div>
+
+    <div class="container">
+        <div class="section">
+            <h2>Giới Thiệu</h2>
+            <p>Xin chào! Tôi là [Tên Của Bạn], một cá nhân đam mê sáng tạo và phát triển các giải pháp đổi mới. Website này là nơi tôi chia sẻ thông tin về bản thân, các dự án cá nhân và doanh nghiệp mà tôi đang vận hành. Cảm ơn bạn đã ghé thăm!</p>
+        </div>
+
+        <div class="section">
+            <h2>Về Doanh Nghiệp Của Tôi</h2>
+            <p>Chúng tôi là [Tên Doanh Nghiệp], một công ty chuyên cung cấp [mô tả ngắn gọn về sản phẩm/dịch vụ, ví dụ: các giải pháp công nghệ, dịch vụ tư vấn, hoặc sản phẩm sáng tạo]. Với sứ mệnh mang lại giá trị tối ưu cho khách hàng, chúng tôi luôn nỗ lực để đáp ứng mọi nhu cầu của bạn.</p>
+            <p>Địa chỉ: [Địa chỉ Doanh Nghiệp, ví dụ: 123 Đường ABC, Quận 1, TP. Hồ Chí Minh, Việt Nam]</p>
+            <a href="#services" class="button">Tìm Hiểu Thêm Về Dịch Vụ</a>
+        </div>
+
+        <div class="section">
+            <h2>Thông Tin Liên Hệ</h2>
+            <ul>
+                <li><strong>Số Điện Thoại:</strong> +84 123 456 789</li>
+                <li><strong>Email:</strong> contact@yourdomain.com</li>
+                <li><strong>Website:</strong> www.yourdomain.com</li>
+                <li><strong>Địa Chỉ:</strong> 123 Đường ABC, Quận 1, TP. Hồ Chí Minh, Việt Nam</li>
+            </ul>
+            <p>Hãy liên hệ với chúng tôi bất cứ lúc nào nếu bạn có câu hỏi hoặc cần hỗ trợ. Chúng tôi luôn sẵn sàng lắng nghe!</p>
+            <a href="mailto:contact@yourdomain.com" class="button">Gửi Email Cho Chúng Tôi</a>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>&copy; 2025 [Tên Doanh Nghiệp]. Mọi quyền được bảo lưu.</p>
+    </div>
+</body>
+</html>
